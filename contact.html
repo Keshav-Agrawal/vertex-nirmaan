@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Contact &amp; Enquiry — Vertex Nirmaan</title>
+<meta name="description" content="Get in touch with Vertex Nirmaan. Fill the enquiry form to start your design, consultancy or turnkey construction project." />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<header class="nav">
+  <div class="container nav__inner">
+    <a class="brand" href="index.html"><span class="brand__mark">VN</span><span>Vertex Nirmaan<small>BUILD WITH TRUST</small></span></a>
+    <button class="nav__toggle" aria-label="Toggle menu">&#9776;</button>
+    <ul class="nav__links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">Why Us</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="portfolio.html">Portfolio</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li class="nav__cta-li"><a class="btn btn-primary nav__cta" href="#" data-open-enquiry>Get Started</a></li>
+    </ul>
+  </div>
+</header>
+
+<section class="page-hero">
+  <div class="container">
+    <div class="breadcrumb"><a href="index.html">Home</a> / Contact</div>
+    <h1>Let's Start Your Project</h1>
+    <p>Fill in the enquiry form and our team will reach out for a free, no-obligation consultation.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="grid grid-2" style="align-items:start;gap:40px;">
+
+      <!-- Contact info -->
+      <div class="reveal">
+        <span class="eyebrow">Get in Touch</span>
+        <h2 class="section-title" style="font-size:2rem;">Reach Vertex Nirmaan</h2>
+        <p style="color:var(--concrete-500);margin-bottom:28px;">We'd love to hear about your project. Use the form, or contact us directly through the details below.</p>
+
+        <div class="feature" style="margin-bottom:16px;display:flex;gap:16px;align-items:center;">
+          <div class="feature__icon" style="margin:0;">&#128222;</div>
+          <div><h3 style="font-size:1.05rem;margin:0;">Phone</h3><p class="placeholder-note" style="margin:0;">[Phone Number]</p></div>
+        </div>
+        <div class="feature" style="margin-bottom:16px;display:flex;gap:16px;align-items:center;">
+          <div class="feature__icon" style="margin:0;">&#9993;</div>
+          <div><h3 style="font-size:1.05rem;margin:0;">Email</h3><p class="placeholder-note" style="margin:0;">[Email Address]</p></div>
+        </div>
+        <div class="feature" style="margin-bottom:16px;display:flex;gap:16px;align-items:center;">
+          <div class="feature__icon" style="margin:0;">&#128205;</div>
+          <div><h3 style="font-size:1.05rem;margin:0;">Office</h3><p class="placeholder-note" style="margin:0;">[Office Address]</p></div>
+        </div>
+        <div class="feature" style="display:flex;gap:16px;align-items:center;">
+          <div class="feature__icon" style="margin:0;">&#128336;</div>
+          <div><h3 style="font-size:1.05rem;margin:0;">Working Hours</h3><p class="placeholder-note" style="margin:0;">[Mon–Sat, 9:00 AM – 7:00 PM]</p></div>
+        </div>
+      </div>
+
+      <!-- Inline enquiry form -->
+      <div class="reveal">
+        <div class="modal__card" style="max-width:none;box-shadow:var(--shadow-md);">
+          <div class="modal__head" style="border-radius:var(--radius) var(--radius) 0 0;">
+            <h3>Enquiry Form</h3><p>Tell us a few details to get started.</p>
+          </div>
+          <form class="form" id="inline-form" novalidate>
+            <div class="row">
+              <div class="field"><label>Full Name *</label><input type="text" required placeholder="Your name" /></div>
+              <div class="field"><label>Phone *</label><input type="tel" required placeholder="Mobile number" /></div>
+            </div>
+            <div class="field"><label>Email</label><input type="email" placeholder="you@example.com" /></div>
+            <div class="row">
+              <div class="field"><label>Service Required *</label>
+                <select required>
+                  <option value="">Select a service</option>
+                  <option>Design &amp; Planning</option>
+                  <option>Consultancy &amp; Supervision</option>
+                  <option>Material Selection &amp; Self-check</option>
+                  <option>Contractor Agreement &amp; Scheduling</option>
+                  <option>Turnkey Construction</option>
+                </select>
+              </div>
+              <div class="field"><label>Location / City</label><input type="text" placeholder="Project location" /></div>
+            </div>
+            <div class="field"><label>Budget Range</label>
+              <select>
+                <option value="">Select (optional)</option>
+                <option>Under ₹10 Lakh</option>
+                <option>₹10 – 25 Lakh</option>
+                <option>₹25 – 50 Lakh</option>
+                <option>₹50 Lakh – 1 Cr</option>
+                <option>Above ₹1 Cr</option>
+              </select>
+            </div>
+            <div class="field"><label>Project Details</label><textarea placeholder="Plot size, timeline, requirements…"></textarea></div>
+            <button type="submit" class="btn btn-primary">Submit Enquiry</button>
+          </form>
+          <div class="form__success" id="inline-success">
+            <div class="tick">&#10003;</div><h3>Thank you!</h3>
+            <p style="color:var(--concrete-500);margin-top:8px;">Your enquiry has been received. Our team will contact you soon.<br><small>(Demo form — connect to email/CRM for live submissions.)</small></p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer__grid">
+      <div class="footer__brand"><div class="brand" style="color:#fff;"><span class="brand__mark">VN</span><span style="color:#fff;">Vertex Nirmaan<small>BUILD WITH TRUST</small></span></div><p>End-to-end construction solutions — design, consultancy, material guidance, structured agreements and turnkey delivery, all under one roof.</p></div>
+      <div><h4>Company</h4><ul><li><a href="about.html">Why Choose Us</a></li><li><a href="services.html">Services</a></li><li><a href="portfolio.html">Portfolio</a></li><li><a href="contact.html">Contact</a></li></ul></div>
+      <div><h4>Services</h4><ul><li><a href="services.html">Design &amp; Planning</a></li><li><a href="services.html">Consultancy &amp; Supervision</a></li><li><a href="services.html">Material Selection</a></li><li><a href="services.html">Turnkey Construction</a></li></ul></div>
+      <div><h4>Get in Touch</h4><ul><li>&#128222; <span class="placeholder-note">[Phone Number]</span></li><li>&#9993; <span class="placeholder-note">[Email Address]</span></li><li>&#128205; <span class="placeholder-note">[Office Address]</span></li></ul></div>
+    </div>
+    <div class="footer__bottom"><span>&copy; <span id="year">2026</span> Vertex Nirmaan. All rights reserved.</span><span>Design • Consultancy • Turnkey</span></div>
+  </div>
+</footer>
+
+<!-- modal kept so nav "Get Started" works here too -->
+<div class="modal" id="enquiry-modal" role="dialog" aria-modal="true">
+  <div class="modal__backdrop" data-close-modal></div>
+  <div class="modal__card">
+    <div class="modal__head"><button class="modal__close" data-close-modal aria-label="Close">&times;</button><h3>Start Your Project</h3><p>Fill in your details and we'll get back to you shortly.</p></div>
+    <form class="form" novalidate>
+      <div class="row"><div class="field"><label>Full Name *</label><input type="text" required placeholder="Your name" /></div><div class="field"><label>Phone *</label><input type="tel" required placeholder="Mobile number" /></div></div>
+      <div class="field"><label>Email</label><input type="email" placeholder="you@example.com" /></div>
+      <div class="row"><div class="field"><label>Service Required *</label><select required><option value="">Select a service</option><option>Design &amp; Planning</option><option>Consultancy &amp; Supervision</option><option>Material Selection &amp; Self-check</option><option>Contractor Agreement &amp; Scheduling</option><option>Turnkey Construction</option></select></div><div class="field"><label>Location / City</label><input type="text" placeholder="Project location" /></div></div>
+      <div class="field"><label>Project Details</label><textarea placeholder="Tell us about your plot size, budget range, timeline or any specific requirement…"></textarea></div>
+      <button type="submit" class="btn btn-primary">Submit Enquiry</button>
+    </form>
+    <div class="form__success"><div class="tick">&#10003;</div><h3>Thank you!</h3><p style="color:var(--concrete-500);margin-top:8px;">Your enquiry has been received. Our team will contact you soon.</p><button class="btn btn-outline" style="margin-top:18px;" data-close-modal>Close</button></div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+<script>
+  // inline contact form success handling
+  (function () {
+    var f = document.getElementById("inline-form");
+    var s = document.getElementById("inline-success");
+    if (f && s) {
+      f.addEventListener("submit", function (e) { e.preventDefault(); f.style.display = "none"; s.classList.add("show"); });
+    }
+  })();
+</script>
+</body>
+</html>
