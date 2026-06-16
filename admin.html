@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Admin — Vertex Nirmaan</title>
+<link rel="icon" href="logo.svg" type="image/svg+xml" />
+<link rel="stylesheet" href="style.css" />
+<style>
+  body { background: var(--concrete-100); }
+  .admin-top { background: var(--concrete-900); color:#fff; padding: 16px 0; position: sticky; top:0; z-index:50; }
+  .admin-top .container { display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+  .admin-top .brand__logo { height:40px; }
+  .admin-wrap { max-width: 1240px; margin: 0 auto; padding: 28px 24px 80px; }
+
+  /* Login */
+  .login-screen { min-height: 78vh; display:grid; place-items:center; padding:24px; }
+  .login-card { background:#fff; border-radius: var(--radius); box-shadow: var(--shadow-md); width:100%; max-width: 420px; overflow:hidden; }
+  .login-card .modal__head { border-radius: var(--radius) var(--radius) 0 0; }
+  .login-card form { padding: 26px 28px 30px; }
+  .login-err { color:#b00020; font-size:.9rem; margin-top:10px; display:none; }
+  .login-err.show { display:block; }
+
+  /* Toolbar */
+  .toolbar { display:flex; gap:12px; flex-wrap:wrap; align-items:center; margin: 8px 0 22px; }
+  .toolbar input[type=search], .toolbar select {
+    padding:10px 14px; border:1px solid var(--concrete-300); border-radius:10px; background:#fff; font-family:inherit; font-size:.95rem;
+  }
+  .toolbar .spacer { flex:1; }
+  .btn-sm { padding:10px 18px; font-size:.9rem; }
+  .pill { display:inline-block; padding:3px 11px; border-radius:999px; font-size:.78rem; font-weight:700; }
+  .pill.New { background:#fdebd9; color:#a85c2a; }
+  .pill.Contacted { background:#dceaff; color:#2456a8; }
+  .pill[data-s="In Progress"] { background:#fff3c4; color:#8a6d00; }
+  .pill.Closed { background:#dceede; color:#2e7d32; }
+
+  .count-badge { background: var(--clay); color:#fff; border-radius:999px; padding:2px 10px; font-size:.85rem; font-weight:700; }
+
+  /* Table */
+  .table-wrap { background:#fff; border-radius: var(--radius); box-shadow: var(--shadow-sm); overflow:auto; }
+  table { width:100%; border-collapse: collapse; min-width: 920px; }
+  th, td { text-align:left; padding:13px 14px; border-bottom:1px solid var(--concrete-100); font-size:.92rem; vertical-align:top; }
+  th { background: var(--concrete-50); font-size:.78rem; letter-spacing:.06em; text-transform:uppercase; color: var(--concrete-500); position:sticky; top:0; }
+  tr:hover td { background: #faf8f4; }
+  td .msg { max-width: 280px; white-space: pre-wrap; color: var(--concrete-700); }
+  .row-actions { display:flex; gap:8px; }
+  .icon-btn { border:1px solid var(--concrete-300); background:#fff; border-radius:8px; padding:6px 10px; cursor:pointer; font-size:.82rem; font-weight:600; }
+  .icon-btn:hover { background: var(--concrete-50); }
+  .icon-btn.danger { color:#b00020; border-color:#f0c0c0; }
+  .icon-btn.danger:hover { background:#fde8e8; }
+
+  .state-msg { padding:40px; text-align:center; color: var(--concrete-500); }
+  .banner { background:#fff3c4; color:#7a5c00; border:1px solid #f0d98a; border-radius:10px; padding:12px 16px; margin-bottom:18px; font-size:.92rem; }
+  .banner code { background:rgba(0,0,0,.06); padding:1px 6px; border-radius:5px; }
+</style>
+</head>
+<body>
+
+<!-- ============ LOGIN ============ -->
+<div id="login" class="login-screen">
+  <div class="login-card">
+    <div class="modal__head">
+      <h3 style="color:#fff;">Vertex Nirmaan — Admin</h3>
+      <p>Enter the password to view enquiries.</p>
+    </div>
+    <form id="login-form">
+      <div class="field"><label>Password</label><input type="password" id="pw" autocomplete="current-password" placeholder="Enter password" required /></div>
+      <div class="login-err" id="login-err">Incorrect password. Please try again.</div>
+      <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;margin-top:6px;">Unlock</button>
+    </form>
+  </div>
+</div>
+
+<!-- ============ DASHBOARD ============ -->
+<div id="dash" style="display:none;">
+  <div class="admin-top">
+    <div class="container">
+      <div class="brand brand--footer"><img src="logo.svg" alt="Vertex Nirmaan" class="brand__logo" /></div>
+      <div style="display:flex;gap:10px;align-items:center;">
+        <span style="color:var(--concrete-300);font-size:.9rem;">Enquiries <span class="count-badge" id="count">0</span></span>
+        <button class="btn btn-primary btn-sm" id="refresh">Refresh</button>
+        <button class="btn btn-ghost btn-sm" id="logout">Log out</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="admin-wrap">
+    <div id="config-banner" class="banner" style="display:none;">
+      No API URL is set yet. Paste your Google Apps Script Web app URL into <code>config.js</code> (see SETUP.md), or set it temporarily here:
+      <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;">
+        <input type="url" id="api-input" placeholder="https://script.google.com/macros/s/…/exec" style="flex:1;min-width:260px;padding:9px 12px;border:1px solid var(--concrete-300);border-radius:8px;" />
+        <button class="btn btn-primary btn-sm" id="save-api">Save URL</button>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <input type="search" id="search" placeholder="Search name, phone, service…" />
+      <select id="filter-status">
+        <option value="">All statuses</option>
+        <option>New</option><option>Contacted</option><option>In Progress</option><option>Closed</option>
+      </select>
+      <div class="spacer"></div>
+      <button class="btn btn-outline btn-sm" id="add-new">+ Add enquiry</button>
+      <button class="btn btn-outline btn-sm" id="export">Export CSV</button>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th><th>Name</th><th>Phone</th><th>Email</th>
+            <th>Service</th><th>City</th><th>Budget</th><th>Message</th><th>Status</th><th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+      <div class="state-msg" id="state">Loading…</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ EDIT/ADD MODAL ============ -->
+<div class="modal" id="edit-modal" role="dialog" aria-modal="true">
+  <div class="modal__backdrop" data-close-edit></div>
+  <div class="modal__card">
+    <div class="modal__head"><button class="modal__close" data-close-edit aria-label="Close">&times;</button><h3 id="edit-title">Edit Enquiry</h3><p>Update the details and save.</p></div>
+    <form class="form" id="edit-form">
+      <input type="hidden" id="e-id" />
+      <div class="row">
+        <div class="field"><label>Name</label><input type="text" id="e-name" /></div>
+        <div class="field"><label>Phone</label><input type="text" id="e-phone" /></div>
+      </div>
+      <div class="field"><label>Email</label><input type="email" id="e-email" /></div>
+      <div class="row">
+        <div class="field"><label>Service</label><input type="text" id="e-service" /></div>
+        <div class="field"><label>City</label><input type="text" id="e-city" /></div>
+      </div>
+      <div class="row">
+        <div class="field"><label>Budget</label><input type="text" id="e-budget" /></div>
+        <div class="field"><label>Status</label>
+          <select id="e-status"><option>New</option><option>Contacted</option><option>In Progress</option><option>Closed</option></select>
+        </div>
+      </div>
+      <div class="field"><label>Message</label><textarea id="e-message"></textarea></div>
+      <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">Save</button>
+    </form>
+  </div>
+</div>
+
+<script src="config.js"></script>
+<script>
+(function () {
+  var PW = (window.VN_ADMIN_PASSWORD || "12345678");
+  function apiUrl() {
+    return (window.VN_API_URL && window.VN_API_URL) || localStorage.getItem("vn_api_url") || "";
+  }
+  var token = "";          // set on login (equals password)
+  var all = [];            // cached enquiries
+
+  // ---------- Login ----------
+  var login = document.getElementById("login");
+  var dash = document.getElementById("dash");
+  if (sessionStorage.getItem("vn_admin_ok") === "1") { token = PW; showDash(); }
+
+  document.getElementById("login-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var v = document.getElementById("pw").value;
+    if (v === PW) { token = v; sessionStorage.setItem("vn_admin_ok", "1"); showDash(); }
+    else { document.getElementById("login-err").classList.add("show"); }
+  });
+  document.getElementById("logout").addEventListener("click", function () {
+    sessionStorage.removeItem("vn_admin_ok"); location.reload();
+  });
+
+  function showDash() {
+    login.style.display = "none"; dash.style.display = "block";
+    if (!apiUrl()) document.getElementById("config-banner").style.display = "block";
+    load();
+  }
+
+  // ---------- Save API URL (temporary) ----------
+  document.getElementById("save-api").addEventListener("click", function () {
+    var u = document.getElementById("api-input").value.trim();
+    if (u) { localStorage.setItem("vn_api_url", u); document.getElementById("config-banner").style.display = "none"; load(); }
+  });
+
+  // ---------- Load list ----------
+  function setState(msg) { var s = document.getElementById("state"); s.style.display = msg ? "block" : "none"; s.textContent = msg || ""; }
+
+  function load() {
+    var url = apiUrl();
+    if (!url) { setState("Set your API URL above to load enquiries."); render([]); return; }
+    setState("Loading…");
+    fetch(url + (url.indexOf("?") > -1 ? "&" : "?") + "action=list&token=" + encodeURIComponent(token))
+      .then(function (r) { return r.json(); })
+      .then(function (res) {
+        if (!res.ok) { setState("Could not load (" + (res.error || "error") + ")."); return; }
+        all = res.data || []; applyFilters();
+      })
+      .catch(function () { setState("Network error — check the API URL and that the script is deployed to ‘Anyone’."); });
+  }
+  document.getElementById("refresh").addEventListener("click", load);
+
+  // ---------- Render ----------
+  function fmtDate(t) {
+    if (!t) return "";
+    var d = new Date(t); if (isNaN(d)) return t;
+    return d.toLocaleDateString() + " " + d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  }
+  function esc(s) { return (s == null ? "" : String(s)).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+
+  function render(rows) {
+    var tb = document.getElementById("tbody");
+    document.getElementById("count").textContent = all.length;
+    if (!rows.length) { tb.innerHTML = ""; setState(apiUrl() ? "No enquiries yet." : "Set your API URL above to load enquiries."); return; }
+    setState("");
+    tb.innerHTML = rows.map(function (r) {
+      return '<tr>' +
+        '<td>' + esc(fmtDate(r.timestamp)) + '</td>' +
+        '<td><b>' + esc(r.name) + '</b></td>' +
+        '<td>' + (r.phone ? '<a href="tel:' + esc(r.phone) + '">' + esc(r.phone) + '</a>' : '') + '</td>' +
+        '<td>' + (r.email ? '<a href="mailto:' + esc(r.email) + '">' + esc(r.email) + '</a>' : '') + '</td>' +
+        '<td>' + esc(r.service) + '</td>' +
+        '<td>' + esc(r.city) + '</td>' +
+        '<td>' + esc(r.budget) + '</td>' +
+        '<td><div class="msg">' + esc(r.message) + '</div></td>' +
+        '<td><span class="pill ' + esc(r.status) + '" data-s="' + esc(r.status) + '">' + esc(r.status || "New") + '</span></td>' +
+        '<td><div class="row-actions">' +
+          '<button class="icon-btn" data-edit="' + esc(r.id) + '">Edit</button>' +
+          '<button class="icon-btn danger" data-del="' + esc(r.id) + '">Delete</button>' +
+        '</div></td>' +
+      '</tr>';
+    }).join("");
+  }
+
+  // ---------- Filters ----------
+  function applyFilters() {
+    var q = document.getElementById("search").value.trim().toLowerCase();
+    var st = document.getElementById("filter-status").value;
+    var rows = all.filter(function (r) {
+      if (st && (r.status || "New") !== st) return false;
+      if (!q) return true;
+      return [r.name, r.phone, r.email, r.service, r.city, r.message].join(" ").toLowerCase().indexOf(q) > -1;
+    });
+    render(rows);
+  }
+  document.getElementById("search").addEventListener("input", applyFilters);
+  document.getElementById("filter-status").addEventListener("change", applyFilters);
+
+  // ---------- POST helper ----------
+  function post(payload, done) {
+    payload.token = token;
+    fetch(apiUrl(), { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(payload) })
+      .then(function (r) { return r.json(); }).then(done).catch(function () { done({ ok: false }); });
+  }
+
+  // ---------- Edit / Add ----------
+  var editModal = document.getElementById("edit-modal");
+  function openEdit(rec) {
+    document.getElementById("edit-title").textContent = rec ? "Edit Enquiry" : "Add Enquiry";
+    document.getElementById("e-id").value = rec ? rec.id : "";
+    ["name", "phone", "email", "service", "city", "budget", "message"].forEach(function (k) {
+      document.getElementById("e-" + k).value = rec ? (rec[k] || "") : "";
+    });
+    document.getElementById("e-status").value = rec ? (rec.status || "New") : "New";
+    editModal.classList.add("open");
+  }
+  function closeEdit() { editModal.classList.remove("open"); }
+  editModal.querySelectorAll("[data-close-edit]").forEach(function (b) { b.addEventListener("click", closeEdit); });
+
+  document.getElementById("add-new").addEventListener("click", function () { openEdit(null); });
+
+  document.getElementById("tbody").addEventListener("click", function (e) {
+    var ed = e.target.getAttribute("data-edit");
+    var dl = e.target.getAttribute("data-del");
+    if (ed) { var rec = all.find(function (r) { return String(r.id) === String(ed); }); openEdit(rec); }
+    if (dl) {
+      if (!confirm("Delete this enquiry permanently?")) return;
+      post({ action: "delete", id: dl }, function (res) { if (res && res.ok) load(); else alert("Delete failed."); });
+    }
+  });
+
+  document.getElementById("edit-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var id = document.getElementById("e-id").value;
+    var payload = { action: id ? "update" : "add" };
+    if (id) payload.id = id;
+    ["name", "phone", "email", "service", "city", "budget", "message"].forEach(function (k) {
+      payload[k] = document.getElementById("e-" + k).value;
+    });
+    payload.status = document.getElementById("e-status").value;
+    var btn = e.target.querySelector('button[type="submit"]'); btn.disabled = true; btn.textContent = "Saving…";
+    post(payload, function (res) {
+      btn.disabled = false; btn.textContent = "Save";
+      if (res && res.ok) { closeEdit(); load(); } else alert("Save failed.");
+    });
+  });
+
+  // ---------- Export CSV ----------
+  document.getElementById("export").addEventListener("click", function () {
+    var cols = ["timestamp", "name", "phone", "email", "service", "city", "budget", "message", "status"];
+    var lines = [cols.join(",")];
+    all.forEach(function (r) {
+      lines.push(cols.map(function (c) { return '"' + String(r[c] == null ? "" : r[c]).replace(/"/g, '""') + '"'; }).join(","));
+    });
+    var blob = new Blob([lines.join("\n")], { type: "text/csv" });
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "vertex-nirmaan-enquiries.csv";
+    a.click();
+  });
+})();
+</script>
+</body>
+</html>

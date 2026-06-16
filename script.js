@@ -2,6 +2,38 @@
    Vertex Nirmaan — shared interactions
    =========================================================== */
 
+/* Collect a form's values by reading each .field's label text. */
+function vnCollectForm(form) {
+  var map = {
+    "full name": "name", "phone": "phone", "email": "email",
+    "service required": "service", "location / city": "city",
+    "budget range": "budget", "project details": "message"
+  };
+  var data = {};
+  form.querySelectorAll(".field").forEach(function (f) {
+    var label = f.querySelector("label");
+    var ctrl = f.querySelector("input, select, textarea");
+    if (!label || !ctrl) return;
+    var key = label.textContent.replace("*", "").trim().toLowerCase();
+    if (map[key]) data[map[key]] = ctrl.value;
+  });
+  return data;
+}
+
+/* Send an enquiry to the Google Sheet API (config.js). Always calls done(). */
+function vnSendEnquiry(form, done) {
+  var url = (typeof window.VN_API_URL !== "undefined" && window.VN_API_URL)
+            || (window.localStorage && localStorage.getItem("vn_api_url")) || "";
+  var data = vnCollectForm(form);
+  data.action = "add";
+  if (!url) { done(); return; } // demo mode — nothing configured yet
+  fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "text/plain;charset=utf-8" },
+    body: JSON.stringify(data)
+  }).then(function () { done(); }).catch(function () { done(); });
+}
+
 document.addEventListener("DOMContentLoaded", function () {
 
   /* ---------- Mobile nav toggle ---------- */
@@ -83,8 +115,13 @@ document.addEventListener("DOMContentLoaded", function () {
     if (form) {
       form.addEventListener("submit", function (e) {
         e.preventDefault();
-        form.style.display = "none";
-        if (success) success.classList.add("show");
+        var btn = form.querySelector('button[type="submit"]');
+        if (btn) { btn.disabled = true; btn.textContent = "Sending…"; }
+        vnSendEnquiry(form, function () {
+          form.style.display = "none";
+          if (success) success.classList.add("show");
+          if (btn) { btn.disabled = false; btn.textContent = "Submit Enquiry"; }
+        });
       });
     }
   }
